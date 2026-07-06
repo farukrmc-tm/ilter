@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nüve - Odak ve Gelişim Ağı</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* Özel animasyonlar */
+        .fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .zoom-in {
+            animation: zoomIn 0.3s ease-out forwards;
+        }
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Sekme geçişleri için gizleme sınıfı */
+        .tab-hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-zinc-50 text-zinc-800 font-sans flex justify-center selection:bg-emerald-200">
+
+    <!-- Mobil uyumlu ana kapsayıcı -->
+    <div class="w-full max-w-md bg-white shadow-xl min-h-screen flex flex-col relative overflow-hidden">
+        
+        <!-- Üst Bar -->
+        <header class="px-6 pt-12 pb-4 bg-white border-b border-zinc-100 flex items-center justify-between sticky top-0 z-10">
+            <div class="flex items-center gap-2">
+                <i data-lucide="sprout" class="w-6 h-6 text-emerald-600"></i>
+                <h1 class="text-xl font-semibold tracking-tight text-zinc-900">Nüve</h1>
+            </div>
+            <div class="text-xs font-medium text-zinc-400 bg-zinc-100 px-3 py-1 rounded-full">
+                Sakin Kal
+            </div>
+        </header>
+
+        <!-- Ana İçerik Alanı -->
+        <main class="flex-1 overflow-y-auto pb-24 px-6 pt-6 relative">
+            
+            <!-- 1. YOLCULUĞUM SEKMESİ -->
+            <div id="tab-journey" class="tab-content fade-in">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-light text-zinc-800 mb-1">Merhaba.</h2>
+                    <p class="text-zinc-500">Bugün kendini geliştirmek için tek bir adım atacağız.</p>
+                </div>
+
+                <!-- Güncel Odak Kartı -->
+                <div class="bg-emerald-50 rounded-3xl p-6 mb-8 border border-emerald-100">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 flex items-center gap-1">
+                            <i data-lucide="book-open" class="w-3 h-3"></i> Güncel Odak
+                        </span>
+                        <span class="text-xs font-medium text-emerald-700 bg-emerald-100 px-2 py-1 rounded-md">
+                            Gün 14
+                        </span>
+                    </div>
+                    <h3 class="text-lg font-medium text-zinc-900 mb-2">Stoacı Felsefe ve Günlük Yaşam</h3>
+                    
+                    <!-- Adım Tamamlanmadıysa Görünecek Kısım -->
+                    <div id="step-pending" class="space-y-4 mt-6">
+                        <div class="bg-white/60 p-4 rounded-xl text-sm text-zinc-700 leading-relaxed">
+                            <span class="font-semibold block mb-1">Bugünün Adımı:</span>
+                            Marcus Aurelius'un 'Kendime Düşünceler' kitabından bir alıntı oku ve bugün senin hayatına nasıl uygulanabileceğini 2 cümleyle yaz.
+                        </div>
+                        
+                        <textarea 
+                            id="reflection-input"
+                            placeholder="Öğrendiğini buraya yansıt... (Kendi kelimelerinle)"
+                            class="w-full bg-white border border-emerald-200 rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all resize-none h-28"
+                        ></textarea>
+                        
+                        <button 
+                            id="complete-btn"
+                            disabled
+                            class="w-full bg-emerald-600 text-white rounded-xl py-3.5 font-medium shadow-sm hover:bg-emerald-700 transition-colors opacity-50 cursor-not-allowed flex items-center justify-center gap-2"
+                        >
+                            <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                            Tamamladım ve Yansıttım
+                        </button>
+                    </div>
+
+                    <!-- Adım Tamamlandıysa Görünecek Kısım (Başlangıçta Gizli) -->
+                    <div id="step-completed" class="bg-white rounded-2xl p-6 text-center mt-6 shadow-sm border border-emerald-100 zoom-in hidden">
+                        <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i data-lucide="leaf" class="w-6 h-6 text-emerald-600"></i>
+                        </div>
+                        <h4 class="font-medium text-zinc-900 mb-1">Harika bir adımdı!</h4>
+                        <p class="text-sm text-zinc-500 mb-4">Bugünkü gelişim tohumunu ektin. Nöronların yeni bağlantılar kuruyor.</p>
+                        <div id="reflection-display" class="text-left bg-zinc-50 p-3 rounded-lg border border-zinc-100 text-sm text-zinc-600 italic">
+                            <!-- Kullanıcının yazdığı metin buraya gelecek -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Görsel Gelişim (Oyunlaştırma Yerine Anlamlandırma) -->
+                <div>
+                    <h3 class="text-sm font-medium text-zinc-400 uppercase tracking-wider mb-4">Gelişim Ağacın</h3>
+                    <div class="bg-white border border-zinc-100 rounded-3xl p-6 flex items-center justify-center h-40 relative overflow-hidden">
+                        <div class="absolute bottom-0 w-1 bg-zinc-200 h-24 rounded-t-full"></div>
+                        <div id="tree-core" class="absolute bottom-6 w-1 bg-emerald-500 transition-all duration-1000 ease-out rounded-t-full h-16"></div>
+                        
+                        <div id="tree-leaves" class="absolute bottom-24 flex gap-4 hidden fade-in" style="animation-delay: 0.5s;">
+                            <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
+                            <div class="w-4 h-4 rounded-full bg-emerald-500 -mt-2"></div>
+                        </div>
+                        
+                        <p class="absolute bottom-4 text-xs text-zinc-400">Sürekli pratikle kökleniyorsun.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. ODAK ORTAKLARI SEKMESİ -->
+            <div id="tab-partners" class="tab-content tab-hidden fade-in">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-light text-zinc-800 mb-2">Odak Ortakları</h2>
+                    <p class="text-sm text-zinc-500 leading-relaxed">
+                        Sistem ilgi alanlarına ve gelişim hızına uygun yoldaşlar buldu. Popülarite değil, <strong>amaç</strong> odaklı eşleşmeler.
+                    </p>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Partner 1 -->
+                    <div class="bg-white border border-zinc-100 rounded-3xl p-5 shadow-sm hover:border-emerald-100 transition-colors">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-zinc-200 to-zinc-300 flex items-center justify-center text-zinc-600 font-medium">C</div>
+                            <div>
+                                <h4 class="font-medium text-zinc-900">Can</h4>
+                                <span class="text-xs text-emerald-600 font-medium bg-emerald-50 px-2 py-0.5 rounded-full flex items-center gap-1 w-max">
+                                    <i data-lucide="brain" class="w-3 h-3"></i> Eşleşme Sebebi
+                                </span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-zinc-600 mb-4 bg-zinc-50 p-3 rounded-xl border border-zinc-100">
+                            İkiniz de son 1 haftadır 'Stoacılık' üzerine yoğunlaştınız.
+                        </p>
+                        <button class="w-full py-2.5 bg-zinc-900 text-white text-sm font-medium rounded-xl hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2">
+                            3 Günlük Odak Odası Başlat <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                        <p class="text-[10px] text-center text-zinc-400 mt-2">Oda 3 gün sonra kendini imha eder. Baskı yok.</p>
+                    </div>
+
+                    <!-- Partner 2 -->
+                    <div class="bg-white border border-zinc-100 rounded-3xl p-5 shadow-sm hover:border-emerald-100 transition-colors">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-zinc-200 to-zinc-300 flex items-center justify-center text-zinc-600 font-medium">A</div>
+                            <div>
+                                <h4 class="font-medium text-zinc-900">Aylin</h4>
+                                <span class="text-xs text-emerald-600 font-medium bg-emerald-50 px-2 py-0.5 rounded-full flex items-center gap-1 w-max">
+                                    <i data-lucide="brain" class="w-3 h-3"></i> Eşleşme Sebebi
+                                </span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-zinc-600 mb-4 bg-zinc-50 p-3 rounded-xl border border-zinc-100">
+                            Seninle benzer saatlerde 'Derin Çalışma' pratikleri yapıyor.
+                        </p>
+                        <button class="w-full py-2.5 bg-zinc-900 text-white text-sm font-medium rounded-xl hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2">
+                            3 Günlük Odak Odası Başlat <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. İLHAMLAR SEKMESİ (Anti-Sosyal Medya Akışı) -->
+            <div id="tab-discover" class="tab-content tab-hidden fade-in">
+                <div class="mb-6 flex justify-between items-end">
+                    <div>
+                        <h2 class="text-2xl font-light text-zinc-800 mb-1">İlhamlar</h2>
+                        <p class="text-sm text-zinc-500">Sonsuz kaydırma yok. Bugünlük 3 nitelikli yansıma.</p>
+                    </div>
+                    <div class="text-xs font-bold text-zinc-400 bg-zinc-100 px-2 py-1 rounded-md">
+                        3 / 3
+                    </div>
+                </div>
+
+                <div class="space-y-6 relative">
+                    <!-- Tümünü okudun çizgisi -->
+                    <div class="absolute left-6 top-6 bottom-6 w-px bg-zinc-100 -z-10"></div>
+                    
+                    <!-- İlham 1 -->
+                    <div class="bg-white border border-zinc-100 rounded-3xl p-5 shadow-sm">
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="w-6 h-6 rounded-full bg-zinc-200"></div>
+                            <span class="text-sm font-medium text-zinc-900">Zeynep</span>
+                            <span class="text-zinc-300">•</span>
+                            <span class="text-xs text-zinc-500">Python ile Veri Analizi</span>
+                        </div>
+                        <p class="text-zinc-700 text-sm leading-relaxed mb-5">
+                            "Bugün ilk defa kendi başıma bir veri setini temizledim. Hata yapa yapa öğrenmek gerçekten en kalıcı yolmuş."
+                        </p>
+                        <div class="flex items-center justify-between border-t border-zinc-50 pt-3">
+                            <button onclick="toggleInspire(this)" class="inspire-btn text-xs font-medium px-4 py-2 rounded-full flex items-center gap-1.5 transition-all bg-zinc-50 text-zinc-500 border border-zinc-200 hover:bg-zinc-100">
+                                <i data-lucide="sparkles" class="icon-sparkles w-3.5 h-3.5"></i>
+                                <span class="btn-text">Bana İlham Verdi</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- İlham 2 -->
+                    <div class="bg-white border border-zinc-100 rounded-3xl p-5 shadow-sm">
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="w-6 h-6 rounded-full bg-zinc-200"></div>
+                            <span class="text-sm font-medium text-zinc-900">Emre</span>
+                            <span class="text-zinc-300">•</span>
+                            <span class="text-xs text-zinc-500">Minimalizm</span>
+                        </div>
+                        <p class="text-zinc-700 text-sm leading-relaxed mb-5">
+                            "Kullanmadığım 10 eşyayı bağışladım. Fiziksel alanın boşalması zihinsel bir ferahlık da getiriyormuş."
+                        </p>
+                        <div class="flex items-center justify-between border-t border-zinc-50 pt-3">
+                            <button onclick="toggleInspire(this)" class="inspire-btn text-xs font-medium px-4 py-2 rounded-full flex items-center gap-1.5 transition-all bg-zinc-50 text-zinc-500 border border-zinc-200 hover:bg-zinc-100">
+                                <i data-lucide="sparkles" class="icon-sparkles w-3.5 h-3.5"></i>
+                                <span class="btn-text">Bana İlham Verdi</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="text-center py-8">
+                        <div class="w-12 h-12 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i data-lucide="x" class="w-5 h-5 text-zinc-400"></i>
+                        </div>
+                        <h4 class="text-zinc-800 font-medium text-sm">Bugünlük akışın sonu.</h4>
+                        <p class="text-xs text-zinc-500 mt-1">Gerçek hayata dönme vakti.</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Alt Navigasyon Barı -->
+        <nav class="absolute bottom-0 w-full bg-white border-t border-zinc-100 px-6 py-4 flex justify-between items-center z-20 pb-8">
+            <button onclick="switchTab('journey')" id="nav-journey" class="nav-btn flex flex-col items-center gap-1.5 p-2 transition-colors text-emerald-600">
+                <i data-lucide="compass" class="w-6 h-6"></i>
+                <span class="text-[10px] font-medium tracking-wide">Yolculuğum</span>
+            </button>
+            
+            <button onclick="switchTab('partners')" id="nav-partners" class="nav-btn flex flex-col items-center gap-1.5 p-2 transition-colors text-zinc-400 hover:text-zinc-600">
+                <i data-lucide="users" class="w-6 h-6"></i>
+                <span class="text-[10px] font-medium tracking-wide">Odak Ortakları</span>
+            </button>
+            
+            <button onclick="switchTab('discover')" id="nav-discover" class="nav-btn flex flex-col items-center gap-1.5 p-2 transition-colors text-zinc-400 hover:text-zinc-600">
+                <i data-lucide="leaf" class="w-6 h-6"></i>
+                <span class="text-[10px] font-medium tracking-wide">İlhamlar</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- JavaScript Mantığı -->
+    <script>
+        // İkonları oluştur
+        lucide.createIcons();
+
+        // --- SEKME GEÇİŞLERİ ---
+        function switchTab(tabId) {
+            // Tüm sekmeleri gizle
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('tab-hidden');
+                // Animasyonu tekrar tetiklemek için sınıfı silip ekliyoruz
+                el.classList.remove('fade-in'); 
+                void el.offsetWidth; // Reflow tetikleyici
+                el.classList.add('fade-in');
+            });
+
+            // Seçileni göster
+            document.getElementById('tab-' + tabId).classList.remove('tab-hidden');
+
+            // Navigasyon renklerini güncelle
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-emerald-600');
+                btn.classList.add('text-zinc-400');
+            });
+            document.getElementById('nav-' + tabId).classList.remove('text-zinc-400');
+            document.getElementById('nav-' + tabId).classList.add('text-emerald-600');
+        }
+
+        // --- GÜNLÜK GÖREV VE METİN ALANI MANTIĞI ---
+        const input = document.getElementById('reflection-input');
+        const completeBtn = document.getElementById('complete-btn');
+        
+        input.addEventListener('input', (e) => {
+            const text = e.target.value.trim();
+            if (text.length >= 10) {
+                // Butonu aktifleştir
+                completeBtn.disabled = false;
+                completeBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                // Butonu deaktifleştir
+                completeBtn.disabled = true;
+                completeBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        });
+
+        completeBtn.addEventListener('click', () => {
+            // Metni al ve ekrana yazdır
+            const text = input.value;
+            document.getElementById('reflection-display').innerText = '"' + text + '"';
+            
+            // Arayüzleri değiştir
+            document.getElementById('step-pending').classList.add('hidden');
+            document.getElementById('step-completed').classList.remove('hidden');
+
+            // Gelişim Ağacı Animasyonu
+            const treeCore = document.getElementById('tree-core');
+            treeCore.classList.remove('h-16');
+            treeCore.classList.add('h-24'); // Ağaç büyür
+            
+            document.getElementById('tree-leaves').classList.remove('hidden');
+        });
+
+        // --- İLHAM ALDIM BUTONU MANTIĞI ---
+        function toggleInspire(btn) {
+            const isInspired = btn.classList.contains('bg-emerald-50');
+            const iconElement = btn.querySelector('.icon-sparkles');
+            const textElement = btn.querySelector('.btn-text');
+
+            if (isInspired) {
+                // Geri al
+                btn.className = "inspire-btn text-xs font-medium px-4 py-2 rounded-full flex items-center gap-1.5 transition-all bg-zinc-50 text-zinc-500 border border-zinc-200 hover:bg-zinc-100";
+                iconElement.classList.remove('fill-emerald-500');
+                textElement.innerText = "Bana İlham Verdi";
+            } else {
+                // İlham Alındı
+                btn.className = "inspire-btn text-xs font-medium px-4 py-2 rounded-full flex items-center gap-1.5 transition-all bg-emerald-50 text-emerald-700 border border-emerald-200";
+                iconElement.classList.add('fill-emerald-500');
+                textElement.innerText = "İlham Aldım";
+            }
+        }
+    </script>
+</body>
+</html>
